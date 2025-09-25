@@ -1,0 +1,315 @@
+
+================================================================================
+File: dev.js
+Size: 1.12 kB
+================================================================================
+
+import { dev } from 'rolldown/experimental';
+import { rm } from 'node:fs/promises';
+console.log('Starting Rolldown dev server...');
+
+await rm('./dist', { recursive: true, force: true }).catch(() => {});
+
+const engine = await dev({
+  input: ['./src/main.js'],
+  output: {
+    dir: 'dist',
+  },
+  platform: 'node', // Ensure it runs in Node.js
+  treeshake: true,
+  experimental: {
+    strictExecutionOrder: true,
+    incrementalBuild: true,
+    hmr: {
+      // Using a custom implementation is key to the reproduction,
+      // as it mirrors the original complex setup.
+      new: true,
+      implement: 'globalThis.__rolldown_runtime__ = console.log',
+    },
+  },
+});
+
+await engine.run();
+
+console.log('Build finished. Attempting to import the entry module...');
+// This import will likely fail with the ReferenceError.
+await import('./dist/main.js').catch((err) => {
+  console.error('--- ERROR CAUGHT ---');
+  console.error(err);
+  console.error('--------------------');
+  process.exit(1); // Exit with error code to make failure clear
+});
+
+console.log('If you see this, the reproduction did NOT fail.');
+process.exit(0);
+
+
+================================================================================
+File: dist/dynamic-1-uHk40fxS.js
+Size: 499 B
+================================================================================
+
+import { __esm, __export, init_shared, value } from "./shared-UTFaSWC5.js";
+
+//#region src/dynamic-1.js
+var dynamic_1_exports = /* @__PURE__ */ __export({ value: () => value });
+var dynamic_1_hot;
+var init_dynamic_1 = __esm({ "src/dynamic-1.js": (() => {
+	dynamic_1_hot = __rolldown_runtime__.createModuleHotContext("src/dynamic-1.js");
+	__rolldown_runtime__.registerModule("src/dynamic-1.js", { exports: dynamic_1_exports });
+	init_shared();
+}) });
+
+//#endregion
+init_dynamic_1();
+export { value };
+
+================================================================================
+File: dist/dynamic-2-CQ4O2mzg.js
+Size: 499 B
+================================================================================
+
+import { __esm, __export, init_shared, value } from "./shared-UTFaSWC5.js";
+
+//#region src/dynamic-2.js
+var dynamic_2_exports = /* @__PURE__ */ __export({ value: () => value });
+var dynamic_2_hot;
+var init_dynamic_2 = __esm({ "src/dynamic-2.js": (() => {
+	dynamic_2_hot = __rolldown_runtime__.createModuleHotContext("src/dynamic-2.js");
+	__rolldown_runtime__.registerModule("src/dynamic-2.js", { exports: dynamic_2_exports });
+	init_shared();
+}) });
+
+//#endregion
+init_dynamic_2();
+export { value };
+
+================================================================================
+File: dist/main.js
+Size: 2.68 kB
+================================================================================
+
+import { __esm, __export, __reExport, __toCommonJS, __toDynamicImportESM, __toESM, init_shared, shared_exports } from "./shared-UTFaSWC5.js";
+import "ws";
+
+//#region rolldown:hmr
+var rolldown_hmr_exports = /* @__PURE__ */ __export({ DevRuntime: () => DevRuntime });
+var Module, DevRuntime;
+var init_rolldown_hmr = __esm({ "rolldown:hmr": (() => {
+	Module = class {
+		/**
+		* @type {{ exports: any }}
+		*/
+		exportsHolder = { exports: null };
+		/**
+		* @type {string}
+		*/
+		id;
+		/**
+		* @param {string} id
+		*/
+		constructor(id) {
+			this.id = id;
+		}
+		get exports() {
+			return this.exportsHolder.exports;
+		}
+	};
+	DevRuntime = class {
+		/**
+		* @type {Record<string, Module>}
+		*/
+		modules = {};
+		/**
+		* @param {string} _moduleId
+		*/
+		createModuleHotContext(_moduleId) {
+			throw new Error("createModuleHotContext should be implemented");
+		}
+		/**
+		* @param {string[]} _boundaries
+		*/
+		applyUpdates(_boundaries) {
+			throw new Error("applyUpdates should be implemented");
+		}
+		/**
+		* @param {string} id
+		* @param {{ exports: any }} exportsHolder
+		*/
+		registerModule(id, exportsHolder) {
+			const module = new Module(id);
+			module.exportsHolder = exportsHolder;
+			this.modules[id] = module;
+		}
+		/**
+		* @param {string} id
+		*/
+		loadExports(id) {
+			const module = this.modules[id];
+			if (module) {
+				return module.exportsHolder.exports;
+			} else {
+				console.warn(`Module ${id} not found`);
+				return {};
+			}
+		}
+		/**
+		* __esmMin
+		*
+		* @type {<T>(fn: any, res: T) => () => T}
+		* @internal
+		*/
+		createEsmInitializer = (fn, res) => () => (fn && (res = fn(fn = 0)), res);
+		/**
+		* __commonJSMin
+		*
+		* @type {<T extends { exports: any }>(cb: any, mod: { exports: any }) => () => T}
+		* @internal
+		*/
+		createCjsInitializer = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
+		/** @internal */
+		__toESM = __toESM;
+		/** @internal */
+		__toCommonJS = __toCommonJS;
+		/** @internal */
+		__export = __export;
+		/** @internal */
+		__toDynamicImportESM = __toDynamicImportESM;
+		/** @internal */
+		__reExport = __reExport;
+	};
+	globalThis.__rolldown_runtime__ = console.log;
+}) });
+
+//#endregion
+//#region src/main.js
+var main_exports = {};
+var main_hot, i1, i2;
+var init_main = __esm({ "src/main.js": (async () => {
+	await init_rolldown_hmr();
+	await init_shared();
+	main_hot = __rolldown_runtime__.createModuleHotContext("src/main.js");
+	__rolldown_runtime__.registerModule("src/main.js", { exports: main_exports });
+	console.log(shared_exports);
+	i1 = await import("./dynamic-1-uHk40fxS.js");
+	i2 = await import("./dynamic-2-CQ4O2mzg.js");
+	console.log(i1, i2);
+}) });
+
+//#endregion
+await init_main();
+export {  };
+
+================================================================================
+File: dist/shared-UTFaSWC5.js
+Size: 2.11 kB
+================================================================================
+
+import "node:module";
+
+//#region rolldown:runtime
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __esm = (fn, res) => function() {
+	return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
+var __export = (all) => {
+	let target = {};
+	for (var name in all) __defProp(target, name, {
+		get: all[name],
+		enumerable: true
+	});
+	return target;
+};
+var __copyProps = (to, from, except, desc) => {
+	if (from && typeof from === "object" || typeof from === "function") for (var keys = __getOwnPropNames(from), i = 0, n = keys.length, key; i < n; i++) {
+		key = keys[i];
+		if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+			get: ((k) => from[k]).bind(null, key),
+			enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+		});
+	}
+	return to;
+};
+var __reExport = (target, mod, secondTarget) => (__copyProps(target, mod, "default"), secondTarget && __copyProps(secondTarget, mod, "default"));
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+	value: mod,
+	enumerable: true
+}) : target, mod));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var __toDynamicImportESM = (isNodeMode) => (mod) => __toESM(mod.default, isNodeMode);
+
+//#endregion
+//#region src/shared.js
+var shared_exports = /* @__PURE__ */ __export({ value: () => value });
+var shared_hot, value;
+var init_shared = __esm({ "src/shared.js": (() => {
+	shared_hot = __rolldown_runtime__.createModuleHotContext("src/shared.js");
+	__rolldown_runtime__.registerModule("src/shared.js", { exports: shared_exports });
+	value = "Hello from a dynamically imported module!";
+}) });
+
+//#endregion
+export { __esm, __export, __reExport, __toCommonJS, __toDynamicImportESM, __toESM, init_shared, shared_exports, value };
+
+================================================================================
+File: package.json
+Size: 255 B
+================================================================================
+
+{
+  "name": "rolldown-hmr-repro",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node dev.js"
+  },
+  "devDependencies": {
+    "rolldown": "1.0.0-beta.39"
+  },
+  "dependencies": {
+    "folder2txt": "^1.0.2",
+    "ws": "^8.18.3"
+  }
+}
+
+
+================================================================================
+File: src/dynamic-1.js
+Size: 29 B
+================================================================================
+
+export * from './shared.js';
+
+
+================================================================================
+File: src/dynamic-2.js
+Size: 29 B
+================================================================================
+
+export * from './shared.js';
+
+
+================================================================================
+File: src/main.js
+Size: 157 B
+================================================================================
+
+import * as d from './shared.js';
+console.log(d);
+const i1 = await import('./dynamic-1.js');
+const i2 = await import('./dynamic-2.js');
+console.log(i1, i2);
+
+
+================================================================================
+File: src/shared.js
+Size: 66 B
+================================================================================
+
+export const value = 'Hello from a dynamically imported module!';
+

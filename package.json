@@ -1,0 +1,15 @@
+{
+  "name": "rolldown-hmr-repro",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node dev.js"
+  },
+  "devDependencies": {
+    "rolldown": "1.0.0-beta.39"
+  },
+  "dependencies": {
+    "folder2txt": "^1.0.2",
+    "ws": "^8.18.3"
+  }
+}
